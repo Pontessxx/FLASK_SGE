@@ -1,0 +1,133 @@
+{% extends "index.html" %}
+{% block content %}
+    <section class="filtro">
+
+        <h2>Filtros de estoque</h2>
+
+        <!-- FORM PARA FILTRO NO DB -->
+        <div class="formulario">
+            <form id="siteForm" action="/estoque" method="POST">
+                <div class="selects_div">
+                    <label for="site">Selecione o Site:</label>
+                    <select id="site" name="site">
+                        <option value="">-- Escolha um Site --</option>
+                        {% for site in sites %}
+                            <option value="{{ site }}" {% if site == selected_site %}selected{% endif %}>
+                                {{ site }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="selects_div">
+                    <label for="local">Selecione a local:</label>
+                    <select id="local" name="local">
+                        <option value="">-- Escolha um local --</option>
+                        {% for local in locais %}
+                            <option value="{{ local }}" {% if local == selected_local %}selected{% endif %}>
+                                {{ local }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="selects_div">
+                    <label for="categoria">Selecione a categoria:</label>
+                    <select id="categoria" name="categoria">
+                        <option value="">-- Escolha uma categoria --</option>
+                        {% for categoria in categorias %}
+                            <option value="{{ categoria }}" {% if categoria == selected_categoria %}selected{% endif %}>
+                                {{ categoria }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="selects_div">
+                    <label for="ind_estoque">Indicador de estoque</label>
+                    <select id="ind_estoque" name="ind_estoque">
+                        <option value="">-- Escolha um indicador de estoque --</option>
+                        {% for ind_estoque in ind_estoques %}
+                            <option value="{{ ind_estoque }}" {% if ind_estoque == selected_ind_estoque %}selected{% endif %}>
+                                {{ ind_estoque }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>     
+                <button id="filtrar" type="submit" class="filtrar-btn"><ion-icon name="filter"></ion-icon> Filtrar</button>
+            </form>
+        </div>
+    </section>
+    <!-- TABELA DE CONDEUDO DO ESTOQUE -->
+    <section id="table-container">
+        {% if data is not none %}
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>DESCRIÇÃO</th>
+                        <th>TAMANHO</th>
+                        <th>MÍDIA</th>
+                        <th>FABRICANTE</th>
+                        <th>QNT_FIS</th>
+                        <th>QNT_DISP</th>
+                        <th>LOCAL</th>
+                        <th>UNIDADE</th>
+                        <th>CATEGORIA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in data.iterrows() %}
+                        <tr>
+                            <td>{{ row['descricao'] }}</td>
+                            <td>{{ row['tamanho'] }}</td>
+                            <td>{{ row['midia'] }}</td>
+                            <td>{{ row['fabricante'] }}</td>
+                            <td>{{ row['qnt_fis'] }}</td>
+                            <td>{{ row['qnt_disp'] }}</td>
+                            <td>{{ row['local'] }}</td>
+                            <td>{{ row['unidade'] }}</td>
+                            <td>{{ row['categoria'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Nenhum dado disponível para o filtro selecionado.</p>
+        {% endif %}
+    </section>
+    <script>
+        document.getElementById('site').addEventListener('change', function () {
+            const siteSelecionado = this.value;
+            const localSelect = document.getElementById('local');
+    
+            // Limpa o dropdown de locais
+            localSelect.innerHTML = '<option value="">-- Escolha um local --</option>';
+    
+            if (siteSelecionado) {
+                // Faz a solicitação ao servidor para obter os locais
+                fetch('/get_locais', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ site: siteSelecionado }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.locais) {
+                            data.locais.forEach(local => {
+                                const option = document.createElement('option');
+                                option.value = local;
+                                option.textContent = local;
+                                localSelect.appendChild(option);
+                            });
+                        } else {
+                            alert(data.error || 'Erro ao carregar os locais.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar os locais:', error);
+                    });
+            }
+        });
+    </script>
+    
+{% endblock %}

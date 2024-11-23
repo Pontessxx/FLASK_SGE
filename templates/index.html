@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INDEX</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+
+    <nav class="sidebar">
+        <ul>
+            <li><a href="/" class="{% if request.path == '/menu' %}ativo{% endif %}">Manual</a></li>
+            <li><a href="/estoque" class="{% if request.path == '/estoque' %}ativo{% endif %}">estoque</a></li>
+            <li><a href="/movimentacao" class="{% if request.path == '/movimentacao' %}ativo{% endif %}">movimentacao</a></li>
+            <li><a href="/cadastro" class="{% if request.path == '/cadastro' %}ativo{% endif %}">cadastro</a></li>
+            <li><a href="/projetos" class="{% if request.path == '/projetos' %}ativo{% endif %}">projetos</a></li>
+            <li><a href="/relatorio" class="{% if request.path == '/relatorio' %}ativo{% endif %}">relatorio</a></li>
+        </ul>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,138 @@
+{% extends "index.html" %}
+{% block content %}
+    <section class="filtro">
+        <h2>Movimentação</h2>
+        <!-- FORM PARA FILTRO NO DB -->
+        <form id="movimentacaoForm" action="/movimentacao" method="POST">
+            <div class="selects_div">
+                <label for="site">Selecione o Site:</label>
+                <select id="site" name="site">
+                    <option value="">-- Escolha um Site --</option>
+                    {% for site in sites %}
+                        <option value="{{ site }}" {% if site == selected_site %}selected{% endif %}>
+                            {{ site }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="selects_div">
+                <label for="local">Selecione a local:</label>
+                <select id="local" name="local">
+                    <option value="">-- Escolha um local --</option>
+                    {% for local in locais %}
+                        <option value="{{ local }}" {% if local == selected_local %}selected{% endif %}>
+                            {{ local }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="selects_div">
+                <label for="categoria">Selecione a categoria:</label>
+                <select id="categoria" name="categoria">
+                    <option value="">-- Escolha uma categoria --</option>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria }}" {% if categoria == selected_categoria %}selected{% endif %}>
+                            {{ categoria }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="selects_div">
+                <label for="datePicker">Selecione o Período de Data:</label>
+                <input type="text" id="datePicker" name="dateRange" placeholder="Selecione o período">
+            </div>
+            <div class="selects_div">
+                <label for="material">Insira o material:</label>
+                <input type="text" name="material" id="material" placeholder="Insira o material">
+            </div>
+            <div class="selects_div">
+                <label for="tipo_os">Selecione a tipo os:</label>
+                <input type="text" name="tipo_os" id="tipo_os" placeholder="Selecione a tipo os">
+            </div>
+            <button id="filtrar" type="submit" class="filtrar-btn"><ion-icon name="filter"></ion-icon> Filtrar</button>
+        </form>
+    </section>
+    <!-- TABELA DE CONDEUDO DO ESTOQUE -->
+    <div id="table-container">
+        {% if data is not none %}
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>DESCRIÇÃO</th>
+                        <th>TAMANHO</th>
+                        <th>QUANTIDADE</th>
+                        <th>DATA</th>
+                        <th>TIPO</th>
+                        <th>ATENDEU</th>
+                        <th>OCORRÊNCIA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in data.iterrows() %}
+                        <tr>
+                            <td>{{ row['descricao'] }}</td>
+                            <td>{{ row['tamanho'] }}</td>
+                            <td>{{ row['quantidade'] }}</td>
+                            <td>{{ row['data'] }}</td>
+                            <td>{{ row['tipo'] }}</td>
+                            <td>{{ row['atendeu'] }}</td>
+                            <td>{{ row['ocorrencia'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Nenhum dado disponível para o filtro selecionado.</p>
+        {% endif %}
+    </div>
+    <script>
+        flatpickr("#datePicker", {
+            mode: "range",
+            dateFormat: "d/m/Y",
+            minDate: "01/01/2024",
+            locale: {
+                firstDayOfWeek: 1
+            },
+            onClose: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    // Define o valor do campo de intervalo de datas no formulário
+                    $('#datePicker').val(dateStr);
+                }
+            }
+        });
+        document.getElementById('site').addEventListener('change', function () {
+            const siteSelecionado = this.value;
+            const localSelect = document.getElementById('local');
+    
+            // Limpa o dropdown de locais
+            localSelect.innerHTML = '<option value="">-- Escolha um local --</option>';
+    
+            if (siteSelecionado) {
+                // Faz a solicitação ao servidor para obter os locais
+                fetch('/get_locais', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ site: siteSelecionado }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.locais) {
+                            data.locais.forEach(local => {
+                                const option = document.createElement('option');
+                                option.value = local;
+                                option.textContent = local;
+                                localSelect.appendChild(option);
+                            });
+                        } else {
+                            alert(data.error || 'Erro ao carregar os locais.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar os locais:', error);
+                    });
+            }
+        });
+    </script>
+{% endblock %}

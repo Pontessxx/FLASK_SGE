@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&display=swap');
+:root{
+    --cor-texto: #fff;
+    --background-menu: #333;
+    --cor-hover-a: #575757;
+    --background-main: #444;
+    --background-th: #cc092f;
+    --cor-btn-filtrar: #096ecc;
+    --cor-btn-add: #149e36;
+    --cor-btn-remove: #b40f30;
+    --tabela-linhas: #f2f2f2;
+    --background-ativo: rgba(255, 255, 255, 0.2)
+}
+*{
+    padding: 0;
+    margin: 0;
+    font-family: "Parkinsans", sans-serif;
+}
+body{
+    display: flex;
+}
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background-color: var(--background-menu);
+    color: var(--cor-texto);
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    color: var(--cor-texto);
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.sidebar ul li a:hover {
+    background-color: var(--cor-hover-a);
+}
+.sidebar ul li a img {
+    width: 20px; /* Ajuste o tamanho conforme necessário */
+    height: auto; /* Mantém a proporção da imagem */
+    margin-right: 20px;
+}
+.sidebar ul li a.ativo {
+    background-color: var(--background-ativo); /* Cor de fundo opaca para o item ativo */
+}
+main {
+    padding: 20px;
+    background-color: var(--background-main);
+    color: var(--cor-texto);
+    width: 100%;
+}
+
+.subtmit-btn{
+    background: var(--cor-btn-add);
+    color: var(--cor-texto);
+    border: none;
+    width: 100px;
+    border-radius: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+.clear-btn{
+    background: var(--cor-btn-remove);
+    color: var(--cor-texto);
+    border: none;
+    width: 100px;
+    border-radius: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+.filtrar-btn{
+    background: var(--cor-btn-filtrar);
+    color: var(--cor-texto);
+    border: none;
+    width: 100px;
+    border-radius: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+.subtmit-btn:hover{
+    opacity: 0.7;
+}
+.filtrar-btn:hover{
+    opacity: 0.7;
+}
+.clear-btn:hover{
+    opacity: 0.7;
+}
+
+
+.selects_div{
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+}
+input{
+    background-color: var(--background-menu);
+    color: var(--cor-texto);
+    border: 1px solid var(--background-main);
+    padding: 8px;
+    border-radius: 10px;
+}
+select{
+    background-color: var(--background-menu);
+    color: var(--cor-texto);
+    padding: 8px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+label{
+    margin-bottom: 10px;
+}
+
+.content-table{
+    border-collapse: collapse;
+    width: 100%;
+}
+tr:nth-child(even) {background-color: var(--tabela-linhas);}
+th {
+    background-color: var(--background-menu);
+    /* padding: 8px; */
+    border: 1px solid var(--tabela-linhas);
+}
+
+
+form{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+form button{
+    margin-left: 10px;
+}
+.containers{
+    display: flex;
+    justify-content: space-evenly;
+}
+.containers .texto_central{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+    margin-bottom: 40px;
+}

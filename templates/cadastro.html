@@ -1,0 +1,172 @@
+{% extends "index.html" %}
+{% block content %}
+    <section class="filtro">
+        <h2>Cadastrar novos materiais</h2>
+        <!-- DIV para cadastrar o material -->
+        <form id="cadastrar_materiais" action="/cadastro" method="POST">
+            <div class="selects_div">
+                <label for="select_tipo_os">Selecione o tipo de os</label>
+                <select name="select_tipo_os" id="select_tipo_os">
+                    <option value="">-- Escolha um tipo de os --</option>
+                    {% for tipo_os in tipos_os %}
+                        <option value="{{ tipo_os }}" {% if tipo_os == selected_tipo_os %}selected{% endif %}>
+                            {{ tipo_os }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="selects_div">
+                <label for="site">Selecione o Site:</label>
+                <select id="site" name="site">
+                    <option value="">-- Escolha um Site --</option>
+                    {% for site in sites %}
+                        <option value="{{ site }}" {% if site == selected_site %}selected{% endif %}>
+                            {{ site }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="selects_div">
+                <label for="codigo_os">Insira o codigo os:</label>
+                <input type="text" name="codigo_os" id="codigo_os">
+            </div>
+            <div class="selects_div">
+                <label for="atividade">Insira a atividade:</label>
+                <input type="text" name="atividade" id="atividade">
+            </div>
+            <button type="submit" class="subtmit-btn"><ion-icon name="add-circle-outline"></ion-icon> Adicionar</button>
+        </form>
+
+
+        <div class="containers">
+            <div class="container-left">
+                <div class="texto_central"><h3>Selecione Onde os materiais virão: </h3></div>
+        
+                <form action="/selecionar_local_material">
+                    <div class="selects_div">
+                        <label for="site">Selecione o Site:</label>
+                        <select id="site" name="site">
+                            <option value="">-- Escolha um Site --</option>
+                            {% for site in sites %}
+                                <option value="{{ site }}" {% if site == selected_site %}selected{% endif %}>
+                                    {{ site }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="selects_div">
+                        <label for="local">Selecione o local:</label>
+                        <select id="local" name="local">
+                            <option value="">-- Escolha um local --</option>
+                            {% for local in locais %}
+                                <option value="{{ local }}" {% if local == selected_local %}selected{% endif %}>
+                                    {{ local }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="selects_div">
+                        <label for="material">Insira o material:</label>
+                        <input type="text" name="material" id="material" placeholder="insira o material" >
+                    </div>
+                    <button id="filtrar" type="submit" class="filtrar-btn"><ion-icon name="filter"></ion-icon> Filtrar</button>
+                </form>
+                <!-- TABELA PARA O CLIQUE -->
+                <div id="table-container">
+                    {% if data is not none %}
+                        <table class="content-table">
+                            <thead>
+                                <tr>
+                                    <th>DESCRIÇÃO</th>
+                                    <th>TAMANHO</th>
+                                    <th>MÍDIA</th>
+                                    <th>FABRICANTE</th>
+                                    <th>QNT_DISP</th>
+                                    <th>LOCAL</th>
+                                    <th>UNIDADE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for index, row in data.iterrows() %}
+                                    <tr>
+                                        <td>{{ row['descricao'] }}</td>
+                                        <td>{{ row['tamanho'] }}</td>
+                                        <td>{{ row['midia'] }}</td>
+                                        <td>{{ row['fabricante'] }}</td>
+                                        <td>{{ row['qnt_disp'] }}</td>
+                                        <td>{{ row['local'] }}</td>
+                                        <td>{{ row['unidade'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>Nenhum dado disponível para o filtro selecionado.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="container-rigth">
+                <div class="texto_central"><h3>Indique na tabela superior e realize a reserva: </h3></div>
+        
+                <form action="/reservar_os">
+                    <div class="selects_div">
+                        <label for="code_os">Reservar para os:</label>
+                        <input type="text" name="code_os" id="code_os" placeholder="insira o codigo" >
+                    </div>
+                    <div class="selects_div">
+                        <label for="qntd_reserva">Selecionar Quantidade:</label>
+                        <input type="text" name="qntd_reserva" id="qntd_reserva" placeholder="Insira a quantidade" >
+                    </div>
+                    <div class="selects_div">
+                        <label for="qntd_reserva">Selecionar Ação:</label>
+                        <select id="acao_reserva" name="acao_reserva">
+                            <option value="">-- Escolha uma ação --</option>
+                            {% for acao_reserva in acao_reservas %}
+                                <option value="{{ acao_reserva }}" {% if acao_reserva == selected_acao_reserva %}selected{% endif %}>
+                                    {{ acao_reserva }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button id="filtrar" type="submit" class="subtmit-btn"><ion-icon name="checkmark-outline"></ion-icon> Reservar</button>
+                    <button id="filtrar" type="submit" class="clear-btn"><ion-icon name="trash-outline"></ion-icon> Limpar</button>
+                </form>
+        
+        
+                <div id="table-container">
+                    {% if data_reserva is not none %}
+                        <table class="content-table">
+                            <thead>
+                                <tr>
+                                    <th>OS</th>
+                                    <th>DESCRIÇÃO</th>
+                                    <th>TAMANHO</th>
+                                    <th>FABRICANTE</th>
+                                    <th>QUANTIDADE</th>
+                                    <th>AÇÃO</th>
+                                    <th>LOCAL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for index, row in data_reserva.iterrows() %}
+                                    <tr>
+                                        <td>{{ row['os'] }}</td>
+                                        <td>{{ row['descricao'] }}</td>
+                                        <td>{{ row['tamanho'] }}</td>
+                                        <td>{{ row['fabricante'] }}</td>
+                                        <td>{{ row['qntd'] }}</td>
+                                        <td>{{ row['acao'] }}</td>
+                                        <td>{{ row['local'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>Nenhum dado disponível para o filtro selecionado.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
